@@ -3,6 +3,7 @@ options:
   bundleIdPrefix: com.nerdsnipe
   deploymentTarget:
     iOS: "18.0"
+    macOS: "15.0"
 packages:
   # DesignFoundationPro is a private, licensed package (github.com/NerdSnipe-Inc/DesignFoundationPro),
   # and that's the intentional gate: the source here is meant to be read and learned from by anyone,
@@ -11,10 +12,10 @@ packages:
   # "repository not found" from SwiftPM rather than a build that silently can't work.
   DesignFoundationPro:
     url: https://github.com/NerdSnipe-Inc/DesignFoundationPro.git
-    from: 2.1.1
+    from: 2.4.0
   DesignFoundation:
     url: https://github.com/NerdSnipe-Inc/design-foundation.git
-    from: 1.5.0
+    from: 1.8.0
 targets:
   BudgetLens:
     type: application
@@ -39,6 +40,27 @@ targets:
     dependencies:
       - package: DesignFoundation
       - package: DesignFoundationPro
+  BudgetLensMac:
+    type: application
+    platform: macOS
+    sources:
+      - BudgetLens
+    settings:
+      base:
+        PRODUCT_NAME: BudgetLens
+        PRODUCT_BUNDLE_IDENTIFIER: com.nerdsnipe.budgetlens
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        SWIFT_VERSION: "6.0"
+        CODE_SIGN_STYLE: Automatic
+        DEVELOPMENT_TEAM: QW2MDLZZJH
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: BudgetLens
+        INFOPLIST_KEY_NSHumanReadableCopyright: "Copyright © 2026 NerdSnipe Inc."
+        "CODE_SIGN_IDENTITY[sdk=macosx*]": "Apple Development"
+    dependencies:
+      - package: DesignFoundation
+      - package: DesignFoundationPro
   BudgetLensTests:
     type: bundle.unit-test
     platform: iOS
@@ -50,3 +72,31 @@ targets:
         GENERATE_INFOPLIST_FILE: YES
     dependencies:
       - target: BudgetLens
+  BudgetLensMacTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - BudgetLensTests
+    settings:
+      base:
+        SWIFT_VERSION: "6.0"
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/BudgetLens.app/Contents/MacOS/BudgetLens"
+        BUNDLE_LOADER: "$(TEST_HOST)"
+    dependencies:
+      - target: BudgetLensMac
+schemes:
+  BudgetLens:
+    build:
+      targets:
+        BudgetLens: all
+    test:
+      targets:
+        - BudgetLensTests
+  BudgetLensMac:
+    build:
+      targets:
+        BudgetLensMac: all
+    test:
+      targets:
+        - BudgetLensMacTests

@@ -1,14 +1,17 @@
 # BudgetLens
 
-[![Platform](https://img.shields.io/badge/platform-iOS%2018%2B-blue)](https://github.com/NerdSnipe-Inc/BudgetLens)
+[![Platform](https://img.shields.io/badge/platform-iOS%2018%2B%20%7C%20macOS%2015%2B-blue)](https://github.com/NerdSnipe-Inc/BudgetLens)
 [![Swift](https://img.shields.io/badge/Swift-6.0-orange)](https://github.com/NerdSnipe-Inc/BudgetLens)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![Built with DesignFoundation](https://img.shields.io/badge/built%20with-DesignFoundation-8A2BE2)](https://github.com/NerdSnipe-Inc/design-foundation)
 
 **BudgetLens** is an open-source [SwiftUI budget tracker and expense tracker app](https://github.com/NerdSnipe-Inc/BudgetLens)
-for iOS — a full-source, production-quality example of a personal finance app built from real,
-reusable components instead of throwaway demo code. It's a companion example to
-[AICompleteChat](https://github.com/NerdSnipe-Inc/AICompleteChat), applying the same
+for **iOS and macOS** — a full-source, production-quality example of a personal finance app,
+[universal across iPhone, iPad, and Mac](https://github.com/NerdSnipe-Inc/BudgetLens), built from
+real, reusable components instead of throwaway demo code. It's part of the same "Lens"
+family of full-source example apps as [ScanLens](https://github.com/NerdSnipe-Inc/ScanLens),
+[ClientLens](https://github.com/NerdSnipe-Inc/ClientLens), [BookLens](https://github.com/NerdSnipe-Inc/BookLens),
+and [AICompleteChat](https://github.com/NerdSnipe-Inc/AICompleteChat), applying the same
 [DesignFoundation](https://github.com/NerdSnipe-Inc/design-foundation) /
 [DesignFoundation Pro](https://github.com/NerdSnipe-Inc/DesignFoundationPro) design system and
 on-device [Apple Intelligence](https://github.com/NerdSnipe-Inc/BudgetLens) stack to a
@@ -41,6 +44,8 @@ on iOS 26? This is a full app, not a snippet.
 
 ## Screenshots
 
+### iPhone
+
 | Dashboard | Trend & Breakdown | Activity |
 |---|---|---|
 | ![Dashboard overview](images/dashboard-overview.png) | ![Dashboard charts](images/dashboard-charts.png) | ![Dashboard activity feed](images/dashboard-activity.png) |
@@ -48,6 +53,20 @@ on iOS 26? This is a full app, not a snippet.
 | Transactions | AI Insights | Categories |
 |---|---|---|
 | ![Transactions list](images/transactions.png) | ![On-device AI insight](images/ai-insights.png) | ![Categories list](images/categories.png) |
+
+### Mac
+
+The same SwiftUI codebase, unmodified, running natively on macOS — DesignFoundation's
+cross-platform theming handles the desktop layout automatically, no `#if os(macOS)` needed in
+app code.
+
+| Dashboard | Transactions |
+|---|---|
+| ![macOS dashboard](images/mac-dashboard.png) | ![macOS transactions](images/mac-transactions.png) |
+
+| AI Insights | Categories |
+|---|---|
+| ![macOS AI insight](images/mac-insights.png) | ![macOS categories](images/mac-categories.png) |
 
 ## What it does
 
@@ -65,8 +84,9 @@ on iOS 26? This is a full app, not a snippet.
 
 ## Requirements
 
-- iOS 18+ (the Insights tab additionally requires iOS 26+ with Apple Intelligence enabled to
-  actually generate on-device; the rest of the app works fully on iOS 18)
+- iOS 18+ or macOS 15+ (the Insights tab additionally requires iOS 26+ / macOS 26+ with Apple
+  Intelligence enabled to actually generate on-device; the rest of the app works fully on the
+  iOS 18 / macOS 15 baseline)
 - Xcode 26+
 - [xcodegen](https://github.com/yonaskolb/XcodeGen) (`brew install xcodegen`) — this repo has no
   committed `.xcodeproj`; regenerate it from `project.yml`
@@ -86,7 +106,7 @@ on iOS 26? This is a full app, not a snippet.
   DesignFoundationPro's access list. [Grab a
   license](https://github.com/NerdSnipe-Inc/DesignFoundationPro) to fix it.
 
-[DesignFoundation](https://github.com/NerdSnipe-Inc/design-foundation) (the free design-system
+[DesignFoundation](https://github.com/NerdSnipe-Inc/design-foundation) (the free swift-ui design-system
 core) is public and resolves automatically via Swift Package Manager.
 
 ## Building
@@ -98,8 +118,9 @@ xcodegen generate
 open BudgetLens.xcodeproj
 ```
 
-Build and run the `BudgetLens` scheme on a simulator or device. The app seeds a month of sample
-transactions on first launch so the dashboard and insights have real data immediately.
+Build and run the `BudgetLens` scheme (iOS, on a simulator or device) or the `BudgetLensMac`
+scheme (native macOS app). The app seeds a month of sample transactions on first launch so the
+dashboard and insights have real data immediately, on either platform.
 
 ## Architecture
 
@@ -127,14 +148,20 @@ The dashboard reuses DesignFoundationPro's `Analytics` vertical wholesale — on
 mapping in `BudgetDashboardView` is app-specific. See DesignFoundationPro's own docs for how
 that vertical is put together.
 
+`project.yml` defines two application targets — `BudgetLens` (iOS) and `BudgetLensMac`
+(macOS) — that both build from the same `BudgetLens/` source folder. No platform-conditional
+code was needed beyond gating `#if os(iOS) .keyboardType(.decimalPad)` on the two numeric text
+fields; DesignFoundation's theming and layout primitives handle the rest of the cross-platform
+adaptation automatically.
+
 ## Related Projects
 
-- [DesignFoundation](https://github.com/NerdSnipe-Inc/design-foundation) — the free SwiftUI
-  design system this app (and its UI) is built on.
-- [DesignFoundation Pro](https://github.com/NerdSnipe-Inc/DesignFoundationPro) — the premium
-  vertical UI kits (Analytics, AI Chat, CRM, E-commerce, and more) BudgetLens's dashboard uses.
-- [AICompleteChat](https://github.com/NerdSnipe-Inc/AICompleteChat) — the sibling full-source
-  example app: an on-device AI chat client built the same way.
+- DesignFoundation — the [free SwiftUI design system](https://github.com/NerdSnipe-Inc/design-foundation) this app (and its UI) is built on.
+- DesignFoundation Pro — the [premium vertical UI kits for Swift](https://github.com/NerdSnipe-Inc/DesignFoundationPro) (Analytics, AI Chat, CRM, E-commerce, and more) BudgetLens's dashboard uses.
+- [ScanLens](https://github.com/NerdSnipe-Inc/ScanLens) — the sibling full-source example app: an on-device AI document and receipt scanner built the same way.
+- [ClientLens](https://github.com/NerdSnipe-Inc/ClientLens) — the sibling full-source example app: an on-device AI CRM/client tracker built the same way.
+- [BookLens](https://github.com/NerdSnipe-Inc/BookLens) — the sibling full-source example app: an on-device AI reading tracker built the same way.
+- AICompleteChat — the sibling full-source example app: an [on-device AI chat client example](https://github.com/NerdSnipe-Inc/AICompleteChat) built the same way.
 
 ## License
 
@@ -143,7 +170,8 @@ is licensed separately (see its own repo).
 
 ---
 
-**Keywords:** SwiftUI budget tracker, iOS expense tracker app, personal finance app SwiftUI,
-SwiftData example app, on-device AI iOS app, Apple Intelligence example, Foundation Models
+**Keywords:** SwiftUI budget tracker, iOS expense tracker app, macOS budget app, personal
+finance app SwiftUI, cross-platform SwiftUI app iOS and macOS, SwiftData example app,
+on-device AI iOS app, on-device AI Mac app, Apple Intelligence example, Foundation Models
 Swift example, LanguageModelSession @Generable, SwiftUI design system, SwiftUI analytics
-dashboard, open source iOS app example.
+dashboard, universal SwiftUI app example, open source iOS and macOS app example.
